@@ -1,205 +1,227 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para alguien que no cree</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0f0c29; /* Fondo galaxia oscuro */
-            background: linear-gradient(to bottom, #24243e, #302b63, #0f0c29);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para alguien especial</title>
 
-        /* --- TERMINAL DE ESCRITURA --- */
-        .terminal-window {
-            width: 90%;
-            max-width: 500px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #444;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            z-index: 10;
-        }
+<style>
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to bottom, #24243e, #302b63, #0f0c29);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        .code-line {
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            margin-bottom: 5px;
-            color: #a9feab;
-        }
+/* TERMINAL */
+.terminal-window {
+    width: 90%;
+    max-width: 500px;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 10px;
+    padding: 20px;
+}
 
-        /* --- CONTENEDOR FINAL --- */
-        .card {
-            display: none; /* Se activa con JS */
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px); /* Efecto cristal */
-            border-radius: 20px;
-            padding: 30px;
-            width: 85%;
-            max-width: 450px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            animation: fadeIn 2s ease-in;
-        }
+.code-line {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #a9feab;
+}
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* TARJETAS */
+.card {
+    display: none;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 30px;
+    width: 85%;
+    max-width: 450px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.2);
+    animation: fadeIn 1s ease-in;
+}
 
-        .tree-container {
-            height: 180px;
-            position: relative;
-            margin-bottom: 20px;
-        }
+@keyframes fadeIn {
+    from {opacity:0; transform: translateY(20px);}
+    to {opacity:1; transform: translateY(0);}
+}
 
-        .trunk {
-            width: 8px;
-            height: 80px;
-            background: #4e342e;
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 4px;
-        }
+/* EFECTO */
+.glow {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ff4d6d, transparent 70%);
+    animation: pulse 2s infinite alternate;
+}
 
-        .heart {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: #ff4d6d;
-            transform: rotate(-45deg);
-            animation: pulse 2s infinite alternate;
-        }
-        .heart::before, .heart::after {
-            content: ''; position: absolute; width: 12px; height: 12px;
-            background: inherit; border-radius: 50%;
-        }
-        .heart::before { top: -6px; left: 0; }
-        .heart::after { left: 6px; top: 0; }
+@keyframes pulse {
+    to { transform: scale(1.2); }
+}
 
-        @keyframes pulse { to { transform: rotate(-45deg) scale(1.2); } }
+h1 { color: #ff85a1; }
 
-        h1 { font-size: 1.5rem; margin-bottom: 15px; color: #ff85a1; }
-        p { font-size: 1rem; line-height: 1.6; color: #e0e0e0; }
+p { color: #e0e0e0; }
 
-        .counter-box {
-            margin-top: 25px;
-            padding: 15px;
-            background: rgba(255, 77, 109, 0.2);
-            border-radius: 12px;
-            border: 1px solid #ff4d6d;
-        }
+/* BOTÓN */
+.btn {
+    margin-top: 20px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(45deg, #ff4d6d, #ff85a1);
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 15px rgba(255,77,109,0.6);
+}
 
-        #timer {
-            font-family: 'Courier New', monospace;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #ff85a1;
-        }
+.btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px rgba(255,77,109,0.9);
+}
 
-        .cursor { display: inline-block; width: 10px; height: 18px; background: #fff; animation: blink 0.8s infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
-    </style>
+.cursor {
+    display: inline-block;
+    width: 10px;
+    height: 18px;
+    background: white;
+    animation: blink 0.8s infinite;
+}
+
+@keyframes blink { 50% {opacity:0;} }
+</style>
 </head>
+
 <body>
 
-    <div class="terminal-window" id="terminal">
-        <div id="typing-area"></div>
-        <span class="cursor"></span>
-    </div>
+<!-- TERMINAL -->
+<div class="terminal-window" id="terminal">
+    <div id="typing-area"></div>
+    <span class="cursor"></span>
+</div>
 
-    <div class="card" id="mainCard">
-        <div class="tree-container">
-            <div class="trunk"></div>
-        </div>
-        
-        <h1>Para la que no cree en nadie...</h1>
-        <p>
-            Sé que las palabras se las lleva el viento y que confiar es difícil. 
-            No te pido que me creas hoy, solo te pido que me dejes demostrarlo. 
-        </p>
-        <p style="font-style: italic; font-size: 0.9rem;">
-            "Si me das una oportunidad, nuestro contador se vería así:"
-        </p>
+<!-- CARD 1 -->
+<div class="card" id="card1">
+    <div class="glow"></div>
+    <h1>Para la niña hermosa… (aunque medio enojada 😒)</h1>
+    <p>
+        No sé qué tienes… pero llamas la atención sin intentarlo.
+    </p>
+    <p>
+        Y sí… a veces sos complicada…  
+        pero curiosamente eso también me gusta.
+    </p>
 
-        <div class="counter-box">
-            <div id="timer">00d 00h 00m 00s</div>
-        </div>
-    </div>
+    <button class="btn" onclick="go2()">Toca aquí 👀</button>
+</div>
 
-    <script>
-        // --- FECHA DE INICIO (El momento en que ella diga que sí) ---
-        // Ponemos una fecha pasada solo de ejemplo para que vea que funciona
-        const targetDate = new Date(); 
+<!-- CARD 2 -->
+<div class="card" id="card2">
+    <div class="glow"></div>
+    <h1>Ahora sí… sin rodeos</h1>
+    <p>
+        Me gustas. Así simple.
+    </p>
+    <p>
+        Y sí… me gustaría ser el que te haga reír  
+        cuando estás seria 😏
+    </p>
 
-        const lines = [
-            "> Iniciando protocolo_sinceridad.exe...",
-            "> Analizando barreras de desconfianza...",
-            "> Cargando argumentos reales...",
-            "> Error: Las palabras no son suficientes.",
-            "> Ejecutando: demostrar_con_hechos.js",
-            "> Redireccionando..."
-        ];
+    <button class="btn" onclick="go3()">¿Curiosa? 👀</button>
+</div>
 
-        const typingArea = document.getElementById('typing-area');
-        let lineIdx = 0;
+<!-- CARD 3 -->
+<div class="card" id="card3">
+    <div class="glow"></div>
+    <h1>Sabía que ibas a presionar 😌</h1>
+    <p>
+        Sos curiosa… y un poquito intensa 😒  
+        pero tranquila… eso no me espanta.
+    </p>
+    <p>
+        De hecho… creo que eso es parte de lo que me gusta de vos.
+    </p>
 
-        function typeTerminal() {
-            if (lineIdx < lines.length) {
-                let p = document.createElement('div');
-                p.className = 'code-line';
-                p.textContent = lines[lineIdx];
-                typingArea.appendChild(p);
-                lineIdx++;
-                setTimeout(typeTerminal, 800);
-            } else {
-                setTimeout(() => {
-                    document.getElementById('terminal').style.display = 'none';
-                    const card = document.getElementById('mainCard');
-                    card.style.display = 'block';
-                    generateHearts();
-                    startTimer();
-                }, 1000);
-            }
-        }
+    <button class="btn" onclick="go4()">Ok… y ahora? 😏</button>
+</div>
 
-        function generateHearts() {
-            const container = document.querySelector('.tree-container');
-            for (let i = 0; i < 40; i++) {
-                const h = document.createElement('div');
-                h.className = 'heart';
-                h.style.left = (Math.random() * 200 - 100 + 50) + '%'; 
-                h.style.left = `calc(50% + ${Math.random() * 160 - 80}px)`;
-                h.style.top = `${Math.random() * 100}px`;
-                h.style.animationDelay = Math.random() * 2 + 's';
-                container.appendChild(h);
-            }
-        }
+<!-- CARD FINAL -->
+<div class="card" id="card4">
+    <div class="glow"></div>
+    <h1>Última cosa…</h1>
+    <p>
+        Entre todas las personas…  
+        justo tu eres la que me da ganas de intentar algo real.
+    </p>
+    <p>
+        Y no sé qué vaya a pasar…  
+        pero sí sé que quiero intentarlo xd JAJAJAJA QUE DECIA.
+    </p>
 
-        function startTimer() {
-            setInterval(() => {
-                const now = new Date();
-                const diff = now - targetDate;
-                const d = Math.floor(diff / 86400000);
-                const h = Math.floor((diff / 3600000) % 24);
-                const m = Math.floor((diff / 60000) % 60);
-                const s = Math.floor((diff / 1000) % 60);
-                document.getElementById('timer').textContent = 
-                    `${d}d ${h}h ${m}m ${s}s`;
-            }, 1000);
-        }
+    <p style="font-style: italic;">
+        (Todo esto empezó porque decidiste presionar un botón…)
+    </p>
+</div>
 
-        typeTerminal();
-    </script>
+<script>
+
+// TERMINAL
+const lines = [
+"> Iniciando protocolo_coqueteo.exe...",
+"> Detectando sonrisa bonita...",
+"> Analizando nivel de actitud 😒...",
+"> Resultado: peligrosa pero me gusta",
+"> Ejecutando: llamar_su_atención.js",
+"> Cargando momento especial..."
+];
+
+let i = 0;
+const typingArea = document.getElementById("typing-area");
+
+function type() {
+    if (i < lines.length) {
+        let p = document.createElement("div");
+        p.className = "code-line";
+        p.textContent = lines[i];
+        typingArea.appendChild(p);
+        i++;
+        setTimeout(type, 700);
+    } else {
+        setTimeout(() => {
+            document.getElementById("terminal").style.display = "none";
+            document.getElementById("card1").style.display = "block";
+        }, 1000);
+    }
+}
+
+// BOTONES
+function go2(){
+    card1.style.display = "none";
+    card2.style.display = "block";
+}
+
+function go3(){
+    card2.style.display = "none";
+    card3.style.display = "block";
+}
+
+function go4(){
+    card3.style.display = "none";
+    card4.style.display = "block";
+}
+
+type();
+
+</script>
+
 </body>
 </html>
