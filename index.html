@@ -3,298 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Misterio de Nohemí ✨</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    
+    <title>Universo para Alguien Especial ✨</title>
     <style>
-        :root {
-            --gold: #fccf31;
-            --pink: #f62681;
-            --glass: rgba(255, 255, 255, 0.1);
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; touch-action: none;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-
-        body {
-            background: linear-gradient(135deg, #0f172a, #312e81, #581c87, #9d174d);
-            background-size: 400% 400%;
-            animation: aurora 15s ease infinite;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-            overflow-x: hidden;
-            padding: 15px;
+        .viewport {
+            width: 100vw; height: 100vh; perspective: 1200px;
+            display: flex; justify-content: center; align-items: center;
+            background: radial-gradient(circle at center, #1a0b2e 0%, #000 85%);
+            cursor: grab;
         }
 
-        @keyframes aurora {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .scene { position: relative; width: 0; height: 0; transform-style: preserve-3d; }
+
+        /* SOL ESFÉRICO */
+        .sun-wrapper { position: absolute; transform-style: preserve-3d; z-index: 10; }
+        .sun {
+            position: absolute; width: 90px; height: 90px;
+            background: radial-gradient(circle, #fff 10%, #ffcc00 50%, #ff6600 100%);
+            border-radius: 50%; transform: translate(-50%, -50%);
+            box-shadow: 0 0 60px #ffcc00, 0 0 120px #ff6600, 0 0 200px rgba(255, 100, 0, 0.4);
         }
 
-        header { 
-            text-align: center; 
-            margin-top: 10px;
-            width: 100%; 
-            max-width: 420px; 
-            z-index: 10;
+        /* PLANETAS (Burbujas) */
+        .planet {
+            position: absolute; border: 2px solid #ff007f; border-radius: 50%;
+            background: rgba(0, 0, 0, 0.85); box-shadow: 0 0 20px #ff007f;
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; color: white; text-align: center;
+            padding: 10px; pointer-events: none;
         }
-        
-        .glass-panel {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 25px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
+        .planet img { width: 45px; height: 45px; margin-bottom: 5px; pointer-events: none; }
+        .planet p { margin: 0; font-weight: bold; font-size: 13px; text-shadow: 0 0 5px #ff007f; }
 
-        h1 { font-family: 'Dancing Script', cursive; font-size: 2.8rem; letter-spacing: 1px; }
-
-        .stats { display: flex; justify-content: space-around; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; }
-        .stats b { color: var(--gold); font-size: 1rem; }
-
-        /* TABLERO 3x4 */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            max-width: 420px;
-            width: 100%;
-            perspective: 1200px;
-            z-index: 10;
+        /* ESTRELLAS FUGACES FONDO */
+        .shooting-star {
+            position: absolute; width: 150px; height: 2px;
+            background: linear-gradient(90deg, #fff, transparent);
+            pointer-events: none;
         }
 
-        .card {
-            aspect-ratio: 1/1.1;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
+        /* METEORITO DE IMPACTO */
+        .meteor {
+            position: absolute; width: 25px; height: 25px;
+            background: #fff; border-radius: 50%;
+            box-shadow: 0 0 20px #ff4500, 0 0 40px #ff007f;
+            z-index: 500; pointer-events: none;
         }
 
-        .card.flipped { transform: rotateY(180deg); }
-
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid rgba(255,255,255,0.15);
+        /* MENSAJE DE IMPACTO */
+        #impact-msg {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            background: rgba(0, 0, 0, 0.6); border: 2px solid #ff007f;
+            padding: 15px 30px; border-radius: 50px; color: white;
+            font-size: 22px; font-weight: bold; backdrop-filter: blur(8px);
+            box-shadow: 0 0 40px #ff007f; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000; text-align: center; pointer-events: none;
+            white-space: nowrap;
         }
 
-        /* Frontal Estilo Lujo */
-        .front {
-            background: #fffdf9;
-            box-shadow: inset 0 0 20px rgba(201, 169, 110, 0.2);
-        }
-        .front::before {
-            content: '';
-            width: 60%; height: 60%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23c9a96e"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: center;
-            opacity: 0.2;
-        }
-
-        /* Trasera con Brillo */
-        .back {
-            background: white;
-            transform: rotateY(180deg);
-            color: #1e1b4b;
-            font-weight: 600;
-            font-size: 1rem;
-            text-align: center;
-            padding: 5px;
-            box-shadow: 0 0 20px rgba(252, 207, 49, 0);
-            transition: box-shadow 0.5s;
-        }
-
-        .card.matched .back {
-            box-shadow: 0 0 25px var(--gold);
-            border: 2px solid var(--gold);
-        }
-
-        /* TEXTO DINÁMICO */
-        #msg-box { min-height: 100px; width: 100%; max-width: 420px; display: flex; align-items: center; justify-content: center; }
-        #msg-text { font-family: 'Dancing Script', cursive; font-size: 1.5rem; text-align: center; line-height: 1.3; color: white; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-
-        /* PANTALLA FINAL */
-        #win-screen {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle, #2e1065, #000);
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            padding: 40px;
-            text-align: center;
-        }
-        #win-screen h2 { font-family: 'Dancing Script', cursive; font-size: 4rem; color: var(--gold); margin-bottom: 20px; }
-        
-        .btn-restart {
-            margin-top: 30px;
-            padding: 15px 40px;
-            border-radius: 50px;
-            border: none;
-            background: white;
-            color: #581c87;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn-restart:hover { transform: scale(1.1); background: var(--gold); }
-
-        /* PARTICULAS */
-        .sparkle { position: fixed; background: white; border-radius: 50%; pointer-events: none; animation: fly 5s infinite; opacity: 0; }
-        @keyframes fly { 0% { transform: translateY(100vh); opacity: 0; } 50% { opacity: 0.6; } 100% { transform: translateY(-10vh); opacity: 0; } }
+        .star-bg { position: absolute; background: white; border-radius: 50%; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <header class="glass-panel">
-        <h1>Para Nohemí ✨</h1>
-        <div class="stats">
-            <div>Intentos: <b id="tries">0</b></div>
-            <div>Parejas: <b id="matches">0/6</b></div>
+    <div id="impact-msg">✨</div>
+
+    <div class="viewport" id="viewport">
+        <div class="scene" id="scene">
+            <div class="sun-wrapper" id="sunWrapper"><div class="sun"></div></div>
         </div>
-    </header>
-
-    <div class="grid" id="grid"></div>
-
-    <div id="msg-box" class="glass-panel" style="margin-top: 20px;">
-        <p id="msg-text">Toca las cartas para descubrir los mensajes que tengo para ti...</p>
-    </div>
-
-    <div id="win-screen">
-        <h2 id="win-title">¡Increíble!</h2>
-        <p id="win-desc" style="font-size: 1.2rem; font-weight: 300; line-height: 1.6;"></p>
-        <button class="btn-restart" onclick="resetGame()">Jugar de nuevo 🔁</button>
     </div>
 
     <script>
-        const pairs = [
-            { txt: 'Destino', desc: 'A veces el destino une a personas que no sabían que se buscaban.' },
-            { txt: 'Suerte', desc: 'Haber coincidido contigo es la casualidad más linda de mis días.' },
-            { txt: 'Sonrisa', desc: 'No imaginas lo mucho que me haces sonreír con solo un mensaje.' },
-            { txt: 'Misterio', desc: 'Me encanta el misterio de ir descubriendo poco a poco quién eres.' },
-            { txt: 'Conexión', desc: 'Aunque no nos hayamos visto aún, siento que te conozco de siempre.' },
-            { txt: 'Magia', desc: 'Hay algo mágico en la forma en que apareciste en mi mundo.' }
+        const scene = document.getElementById('scene');
+        const viewport = document.getElementById('viewport');
+        const sunWrapper = document.getElementById('sunWrapper');
+        const impactMsg = document.getElementById('impact-msg');
+        
+        const loveData = [
+            { img: 'https://cdn-icons-png.flaticon.com/512/3588/3588631.png', txt: '¿POR QUÉ TAN LINDA?' },
+            { txt: 'HACES MI MUNDO BRILLAR' },
+            { img: 'https://cdn-icons-png.flaticon.com/512/1090/1090806.png', txt: 'ERES MI FAVORITA' },
+            { txt: 'UN UNIVERSO CONTIGO' },
+            { img: 'https://cdn-icons-png.flaticon.com/512/833/833472.png', txt: 'ME ENCANTAS' },
+            { txt: 'TIENES ALGO MÁGICO' }
         ];
 
-        let cards = [];
-        let flipped = [];
-        let solved = 0;
-        let attempts = 0;
-        let lock = false;
+        const specialPhrases = [
+            "¡Impactado por tu sonrisa! 😍",
+            "¡Eres de otro planeta! 🚀",
+            "¡Me dejas sin palabras! ✨",
+            "¡Mi mundo gira por ti! 💖",
+            "¡Eres una estrella! ⭐",
+            "¡Qué suerte conocerte! 😊"
+        ];
 
-        function init() {
-            const grid = document.getElementById('grid');
-            grid.innerHTML = '';
-            const deck = [...pairs, ...pairs].sort(() => Math.random() - 0.5);
+        const planets = [];
+        
+        // Estrellas de fondo estáticas
+        for(let i=0; i<200; i++) {
+            const s = document.createElement('div');
+            s.className = 'star-bg';
+            const size = Math.random() * 2;
+            s.style.width = s.style.height = size + 'px';
+            const [x, y, z] = [Math.random()-0.5, Math.random()-0.5, Math.random()-0.5].map(v => v * 3000);
+            s.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
+            scene.appendChild(s);
+        }
+
+        // Crear Planetas Orbitantes
+        loveData.forEach((data, i) => {
+            const pEl = document.createElement('div');
+            pEl.className = 'planet';
+            pEl.style.width = pEl.style.height = '125px';
+            if(data.img) {
+                const img = document.createElement('img'); img.src = data.img;
+                pEl.appendChild(img);
+            }
+            const p = document.createElement('p'); p.textContent = data.txt;
+            pEl.appendChild(p);
+            scene.appendChild(pEl);
             
-            deck.forEach((p, i) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.dataset.val = p.txt;
-                card.dataset.msg = p.desc;
-                card.innerHTML = `
-                    <div class="card-face front"></div>
-                    <div class="card-face back">${p.txt}</div>
-                `;
-                card.onclick = () => flip(card);
-                grid.appendChild(card);
+            planets.push({
+                el: pEl,
+                angle: (i / loveData.length) * Math.PI * 2,
+                radius: 350 + (i * 25),
+                speed: 0.004 + (Math.random() * 0.002),
+                yPos: (Math.random() - 0.5) * 250
             });
-            createParticles();
-        }
+        });
 
-        function flip(card) {
-            if (lock || card.classList.contains('flipped') || flipped.includes(card)) return;
+        // Estrellas fugaces de fondo constantes
+        function shootStar() {
+            const s = document.createElement('div');
+            s.className = 'shooting-star';
+            const [x, y, z] = [(Math.random()-0.5)*2500, (Math.random()-0.5)*2500, (Math.random()-0.5)*1500];
+            s.style.transform = `translate3d(${x}px, ${y}px, ${z}px) rotate(${Math.random()*360}deg)`;
+            scene.appendChild(s);
+            s.animate([{left: '-100px', opacity: 1}, {left: '500px', opacity: 0}], {duration: 1200});
+            setTimeout(() => s.remove(), 1200);
+        }
+        setInterval(shootStar, 600);
+
+        // --- SISTEMA DE IMPACTOS MÚLTIPLES ---
+        function launchMeteor() {
+            const m = document.createElement('div');
+            m.className = 'meteor';
+            scene.appendChild(m);
             
-            card.classList.add('flipped');
-            flipped.push(card);
-
-            if (flipped.length === 2) {
-                attempts++;
-                document.getElementById('tries').innerText = attempts;
-                check();
-            }
-        }
-
-        function check() {
-            lock = true;
-            const [c1, c2] = flipped;
+            // Elegir un planeta al azar para el impacto
+            const target = planets[Math.floor(Math.random() * planets.length)];
+            const startPos = { x: (Math.random()-0.5)*2000, y: -1000, z: (Math.random()-0.5)*1000 };
             
-            if (c1.dataset.val === c2.dataset.val) {
-                c1.classList.add('matched');
-                c2.classList.add('matched');
-                document.getElementById('msg-text').innerText = c1.dataset.msg;
-                solved++;
-                document.getElementById('matches').innerText = `${solved}/6`;
-                flipped = [];
-                lock = false;
-                if (solved === 6) setTimeout(win, 800);
-            } else {
-                setTimeout(() => {
-                    c1.classList.remove('flipped');
-                    c2.classList.remove('flipped');
-                    flipped = [];
-                    lock = false;
-                }, 1000);
-            }
+            let progress = 0;
+            const anim = setInterval(() => {
+                progress += 0.025; // Velocidad del meteorito
+                
+                // Posición actual del planeta (se mueve mientras el meteorito cae)
+                const px = Math.cos(target.angle) * target.radius;
+                const py = target.yPos;
+                const pz = Math.sin(target.angle) * target.radius;
+
+                // Interpolación para el movimiento del meteorito
+                const mx = startPos.x + (px - startPos.x) * progress;
+                const my = startPos.y + (py - startPos.y) * progress;
+                const mz = startPos.z + (pz - startPos.z) * progress;
+
+                m.style.transform = `translate3d(${mx}px, ${my}px, ${mz}px)`;
+
+                if(progress >= 1) {
+                    clearInterval(anim);
+                    m.remove();
+                    showImpactMessage();
+                }
+            }, 16);
         }
 
-        function win() {
-            const desc = document.getElementById('win-desc');
-            const title = document.getElementById('win-title');
+        function showImpactMessage() {
+            impactMsg.textContent = specialPhrases[Math.floor(Math.random()*specialPhrases.length)];
+            impactMsg.style.transform = "translate(-50%, -50%) scale(1.2)";
+            impactMsg.style.opacity = "1";
             
-            if (attempts <= 12) {
-                title.innerText = "¡Conexión Real! ✨";
-                desc.innerHTML = `Lo resolviste en solo ${attempts} intentos. <br>Parece que nuestras mentes ya están en sintonía, Nohemí.`;
-            } else {
-                title.innerText = "¡Lo lograste! ❤️";
-                desc.innerHTML = `Completaste el misterio. <br>Ahora solo falta descubrir el mayor secreto: <br><b>¿Me dejas seguir robándote sonrisas?</b>`;
-            }
+            setTimeout(() => {
+                impactMsg.style.transform = "translate(-50%, -50%) scale(0)";
+                impactMsg.style.opacity = "0";
+            }, 2000);
+        }
+
+        // Lanza meteoritos en ráfagas
+        setInterval(() => {
+            launchMeteor();
+            setTimeout(launchMeteor, 1500); // Un segundo meteorito poco después
+        }, 7000); 
+
+        // Rotación de Cámara 360 e Interacción
+        let rotX = -10, rotY = 0, tRotX = -10, tRotY = 0, isDown = false, sX, sY;
+        viewport.onpointerdown = e => { isDown = true; sX = e.clientX; sY = e.clientY; };
+        window.onpointermove = e => { if(!isDown) return; tRotY += (e.clientX-sX)*0.2; tRotX -= (e.clientY-sY)*0.2; sX = e.clientX; sY = e.clientY; };
+        window.onpointerup = () => isDown = false;
+
+        function draw() {
+            // Suavizado de rotación
+            rotX += (tRotX - rotX) * 0.1; rotY += (tRotY - rotY) * 0.1;
+            scene.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
             
-            document.getElementById('win-screen').style.display = 'flex';
-        }
+            // Sol siempre mirando a cámara
+            sunWrapper.style.transform = `rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
 
-        // REINICIAR CORREGIDO
-        function resetGame() {
-            document.getElementById('win-screen').style.display = 'none';
-            solved = 0;
-            attempts = 0;
-            document.getElementById('tries').innerText = '0';
-            document.getElementById('matches').innerText = '0/6';
-            document.getElementById('msg-text').innerText = 'Toca las cartas para descubrir los mensajes que tengo para ti...';
-            init(); // Reinicia el tablero sin recargar toda la página
+            planets.forEach(p => {
+                p.angle += p.speed;
+                const x = Math.cos(p.angle) * p.radius;
+                const z = Math.sin(p.angle) * p.radius;
+                
+                // Billboard effect + escala por profundidad
+                const s = 1 + (z / 1500);
+                p.el.style.transform = `translate3d(${x}px, ${p.yPos}px, ${z}px) 
+                                       rotateY(${-rotY}deg) rotateX(${-rotX}deg) 
+                                       scale(${s})`;
+                p.el.style.zIndex = Math.round(z + 500);
+                p.el.style.opacity = 0.5 + ((z + 500) / 1000); // Más tenue al fondo
+            });
+            requestAnimationFrame(draw);
         }
-
-        function createParticles() {
-            for (let i = 0; i < 40; i++) {
-                const s = document.createElement('div');
-                s.className = 'sparkle';
-                s.style.width = Math.random() * 4 + 'px';
-                s.style.height = s.style.width;
-                s.style.left = Math.random() * 100 + 'vw';
-                s.style.animationDelay = Math.random() * 5 + 's';
-                document.body.appendChild(s);
-            }
-        }
-
-        init();
+        draw();
     </script>
 </body>
 </html>
